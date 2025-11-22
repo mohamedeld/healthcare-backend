@@ -20,7 +20,7 @@ const app = express();
 app.use(helmet());
 
 const corsOptions = {
-  origin: process.env.CLIENT_URL || "http://localhost:5173",
+  origin: process.env.CLIENT_URL || "https://healthcare-front-phi.vercel.app",
   credentials: true,
   optionsSuccessStatus: 200,
 };

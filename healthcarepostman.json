@@ -1,0 +1,527 @@
+{
+  "info": {
+    "name": "Healthcare Management System API",
+    "description": "Complete API collection for Healthcare Management System",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000/api",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register Patient",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\",\n  \"role\": \"patient\",\n  \"phone\": \"+1234567890\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Register Doctor",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Dr. Jane Smith\",\n  \"email\": \"jane@example.com\",\n  \"password\": \"password123\",\n  \"role\": \"doctor\",\n  \"specialization\": \"Cardiology\",\n  \"phone\": \"+1234567891\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.environment.set('token', jsonData.token);",
+                  "    pm.collectionVariables.set('token', jsonData.token);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"patient@test.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Get Current User",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "me"]
+            }
+          }
+        },
+        {
+          "name": "Get All Doctors",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/doctors",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "doctors"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Visits - Patient",
+      "item": [
+        {
+          "name": "Create Visit",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"doctorId\": \"<DOCTOR_ID>\",\n  \"scheduledDate\": \"2024-12-01T10:00:00Z\",\n  \"chiefComplaint\": \"Chest pain and shortness of breath\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/visits",
+              "host": ["{{baseUrl}}"],
+              "path": ["visits"]
+            }
+          }
+        },
+        {
+          "name": "Get My Visits",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/visits/my-visits",
+              "host": ["{{baseUrl}}"],
+              "path": ["visits", "my-visits"]
+            }
+          }
+        },
+        {
+          "name": "Get Visit by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/visits/<VISIT_ID>",
+              "host": ["{{baseUrl}}"],
+              "path": ["visits", "<VISIT_ID>"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Visits - Doctor",
+      "item": [
+        {
+          "name": "Start Visit",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/visits/<VISIT_ID>/start",
+              "host": ["{{baseUrl}}"],
+              "path": ["visits", "<VISIT_ID>", "start"]
+            }
+          }
+        },
+        {
+          "name": "Update Visit",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"diagnosis\": \"Mild angina, requires medication\",\n  \"notes\": \"Patient advised to reduce stress and follow medication\",\n  \"chiefComplaint\": \"Chest pain and shortness of breath\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/visits/<VISIT_ID>",
+              "host": ["{{baseUrl}}"],
+              "path": ["visits", "<VISIT_ID>"]
+            }
+          }
+        },
+        {
+          "name": "Add Treatment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"ECG Test\",\n  \"description\": \"Electrocardiogram\",\n  \"quantity\": 1,\n  \"unitPrice\": 80,\n  \"category\": \"lab_test\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/visits/<VISIT_ID>/treatments",
+              "host": ["{{baseUrl}}"],
+              "path": ["visits", "<VISIT_ID>", "treatments"]
+            }
+          }
+        },
+        {
+          "name": "Update Treatment",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Treatment\",\n  \"quantity\": 2,\n  \"unitPrice\": 100\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/visits/<VISIT_ID>/treatments/<TREATMENT_ID>",
+              "host": ["{{baseUrl}}"],
+              "path": ["visits", "<VISIT_ID>", "treatments", "<TREATMENT_ID>"]
+            }
+          }
+        },
+        {
+          "name": "Delete Treatment",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/visits/<VISIT_ID>/treatments/<TREATMENT_ID>",
+              "host": ["{{baseUrl}}"],
+              "path": ["visits", "<VISIT_ID>", "treatments", "<TREATMENT_ID>"]
+            }
+          }
+        },
+        {
+          "name": "Complete Visit",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/visits/<VISIT_ID>/complete",
+              "host": ["{{baseUrl}}"],
+              "path": ["visits", "<VISIT_ID>", "complete"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Finance",
+      "item": [
+        {
+          "name": "Search Visits - All",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/finance/visits",
+              "host": ["{{baseUrl}}"],
+              "path": ["finance", "visits"]
+            }
+          }
+        },
+        {
+          "name": "Search by Doctor Name",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/finance/visits?doctorName=Smith",
+              "host": ["{{baseUrl}}"],
+              "path": ["finance", "visits"],
+              "query": [
+                {
+                  "key": "doctorName",
+                  "value": "Smith"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Search by Patient Name",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/finance/visits?patientName=John",
+              "host": ["{{baseUrl}}"],
+              "path": ["finance", "visits"],
+              "query": [
+                {
+                  "key": "patientName",
+                  "value": "John"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Search by Visit ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/finance/visits?visitId=<VISIT_ID>",
+              "host": ["{{baseUrl}}"],
+              "path": ["finance", "visits"],
+              "query": [
+                {
+                  "key": "visitId",
+                  "value": "<VISIT_ID>"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Search Multi-Parameter",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/finance/visits?doctorName=Smith&status=completed&paymentStatus=pending&page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["finance", "visits"],
+              "query": [
+                {
+                  "key": "doctorName",
+                  "value": "Smith"
+                },
+                {
+                  "key": "status",
+                  "value": "completed"
+                },
+                {
+                  "key": "paymentStatus",
+                  "value": "pending"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Payment Status",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paymentStatus\": \"paid\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/finance/visits/<VISIT_ID>/payment",
+              "host": ["{{baseUrl}}"],
+              "path": ["finance", "visits", "<VISIT_ID>", "payment"]
+            }
+          }
+        },
+        {
+          "name": "Get Dashboard Statistics",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/finance/dashboard",
+              "host": ["{{baseUrl}}"],
+              "path": ["finance", "dashboard"]
+            }
+          }
+        },
+        {
+          "name": "Export Visits",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/finance/export?status=completed",
+              "host": ["{{baseUrl}}"],
+              "path": ["finance", "export"],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "completed"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
